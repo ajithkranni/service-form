@@ -1,0 +1,39 @@
+### Coding and Design Approach
+==============================
+
+I built the form using **HTML, CSS and vanilla JavaScript**, keeping the three areas separate so the application is easy to understand, test and maintain.
+
+The HTML uses semantic elements such as `<form>`, `<label>`, `<input>`, `<select>` and `<button>` to provide a clear structure. Form fields are grouped logically 
+to make the form easier to follow.
+
+The CSS uses **Flexbox/Grid, consistent spacing, responsive sizing and media queries** to create a clean layout that adapts to different screen sizes. 
+I avoided unnecessary frameworks to keep the solution lightweight.
+
+JavaScript is used for **client-side validation and form interactions**. Validation checks the user's input before submission and displays 
+clear feedback when information is missing or invalid. The code is organised into small functions to make the behaviour easier to maintain.
+
+### Key Implementation Choices
+==============================
+
+* **HTML:** Semantic form elements are used rather than creating form controls with generic `<div>` elements.
+* **CSS:** Reusable classes provide consistent styling for form fields, buttons, validation messages and layout sections.
+* **JavaScript:** Event listeners handle form submission and user interactions without requiring unnecessary page reloads.
+* **Validation:** Required fields and input formats are checked before the form is submitted.
+* **Responsive design:** CSS media queries adjust the layout for smaller screens, making the form usable on desktop, tablet and mobile devices.
+* **Separation of concerns:** HTML handles structure, CSS handles presentation, and JavaScript handles behaviour.
+
+### Accessibility Features
+==========================
+
+I implemented accessibility features to make the form easier to use for people with different needs.
+
+* Each form control has an associated **`<label>`**, so users can understand what information is required.
+* Form controls can be accessed using **keyboard navigation**.
+* The layout uses clear headings, readable text and sufficient spacing between controls.
+* **Focus states** help users identify which field or button currently has keyboard focus.
+* Validation messages provide **text-based feedback**, rather than relying only on colour.
+* Required fields are clearly identified.
+* Input types such as `email`, `tel` and appropriate controls are used where applicable to help browsers and assistive technologies understand the expected information.
+* The responsive layout allows the form to remain usable at different screen sizes and zoom levels.
+
+The overall approach was to keep the implementation simple while providing a **responsive, maintainable and accessible form** with clear user feedback.
