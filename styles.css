@@ -1,0 +1,751 @@
+/* ==========================================================================
+   DESIGN TOKENS
+   All colors, fonts, and shared values live here as CSS custom properties.
+   Change a value once here and it updates everywhere it's used below.
+   ========================================================================== */
+
+:root {
+  /* Text colors */
+  --ink: #14213D;        /* main body/heading text */
+  --ink-soft: #3D4A63;   /* secondary text: hints, descriptions */
+
+  /* Brand accent color, used sparingly (buttons, focus rings, links) */
+  --teal: #0B5D52;
+  --teal-dark: #084840;  /* hover state for the accent color */
+
+  /* Backgrounds */
+  --paper: #F4F6F5;      /* page background */
+  --surface: #FFFFFF;    /* cards, inputs, anything "raised" above the page */
+
+  /* Borders */
+  --line: #D8DCDA;          /* light dividers */
+  --line-strong: #AEB6B3;   /* input borders, needs more contrast than dividers */
+
+  /* Status colors */
+  --error: #B3261E;
+  --error-bg: #FBEAE9;
+  --success: #1E7A46;
+  --success-bg: #EAF5EE;
+
+  /* Focus ring color (kept separate from --teal in case you want them to differ later) */
+  --focus: #0B5D52;
+
+  /* Shared corner radius so every element rounds the same amount */
+  --radius: 4px;
+
+  /* Two typefaces, two jobs:
+     - font-head: serif, used only for the two headings (gives the page some weight)
+     - font-body: sans-serif, used for everything functional (labels, inputs, hints) */
+  --font-head: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Dark mode: redefine the same tokens when the browser/OS prefers dark.
+   Because every component below references var(--ink) etc. instead of a
+   hard-coded color, the whole page re-themes automatically — no extra rules needed. */
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    --ink: #EDEFF2;
+    --ink-soft: #B7BFCB;
+    --paper: #14181B;
+    --surface: #1C2226;
+    --line: #333B3E;
+    --line-strong: #4A5457;
+    --error-bg: #3A1E1C;
+    --success-bg: #16302123;
+    --teal: #4FA595;
+  }
+}
+
+/* Same dark palette, but forced on via a data attribute instead of the OS setting
+   (useful if you ever add a manual light/dark toggle to the page). */
+:root[data-theme="dark"] {
+  --ink: #EDEFF2;
+  --ink-soft: #B7BFCB;
+  --paper: #14181B;
+  --surface: #1C2226;
+  --line: #333B3E;
+  --line-strong: #4A5457;
+  --error-bg: #3A1E1C;
+  --success-bg: #16302123;
+  --teal: #4FA595;
+}
+
+
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
+
+* {
+  box-sizing: border-box; /* padding/border no longer add to an element's declared width */
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* ==========================================================================
+   ACCESSIBILITY: SKIP LINK
+   Hidden off-screen until it receives keyboard focus, so keyboard/screen-reader
+   users can jump straight past the header to the form instead of tabbing through it.
+   ========================================================================== */
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--surface);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius);
+  z-index: 100;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+
+/* ==========================================================================
+   ACCESSIBILITY: VISUALLY HIDDEN TEXT
+   Hides content visually while keeping it readable by screen readers —
+   used for text that clarifies meaning (e.g. "(required)") without cluttering the UI.
+   ========================================================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+
+/* ==========================================================================
+   PAGE HEADER
+   ========================================================================== */
+
+header.service-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.header-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-inner svg {
+  flex-shrink: 0;
+  color: var(--teal);
+}
+
+.header-inner .org {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0 0 0.15rem 0;
+}
+
+.header-inner h1 {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   MAIN CONTENT LAYOUT
+   Single centered column — forms are read top-to-bottom, so there's
+   no benefit to a wider or multi-column layout here.
+   ========================================================================== */
+
+main {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+
+/* ==========================================================================
+   INTRO TEXT
+   ========================================================================== */
+
+.intro {
+  margin-bottom: 1.5rem;
+}
+
+.intro h2 {
+  font-family: var(--font-head);
+  font-weight: 500;
+  font-style: italic;
+  font-size: 1.45rem;
+  margin: 0 0 0.6rem;
+}
+
+.intro p {
+  color: var(--ink-soft);
+  margin: 0 0 0.7rem;
+  max-width: 62ch; /* keeps line length readable regardless of screen width */
+}
+
+
+/* ==========================================================================
+   INSTRUCTIONS BOX
+   The "Before you start" callout — a teal left border distinguishes it
+   from ordinary body text without needing a heavier background color.
+   ========================================================================== */
+
+.instructions-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--teal);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.instructions-box h3 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.instructions-box ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.instructions-box li {
+  margin-bottom: 0.3rem;
+}
+
+.instructions-box li:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ==========================================================================
+   ERROR SUMMARY
+   Shown at the top of the form after a failed submit. Hidden by default;
+   JavaScript adds the .visible class when there are errors to report.
+   ========================================================================== */
+
+#error-summary {
+  background: var(--error-bg);
+  border: 1px solid var(--error);
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 2rem;
+  display: none;
+}
+
+#error-summary.visible {
+  display: block;
+}
+
+#error-summary h2 {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--error);
+  margin: 0 0 0.6rem;
+}
+
+#error-summary ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+#error-summary li {
+  margin-bottom: 0.3rem;
+}
+
+#error-summary a {
+  color: var(--error);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+#error-summary a:hover {
+  text-decoration: none;
+}
+
+
+/* ==========================================================================
+   SUCCESS PANEL
+   Shown in place of the form after a successful submit. Hidden by default.
+   ========================================================================== */
+
+.success-panel {
+  display: none;
+  background: var(--success-bg);
+  border: 1px solid var(--success);
+  border-left-width: 4px;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.success-panel.visible {
+  display: block;
+}
+
+.success-panel h2 {
+  font-family: var(--font-head);
+  color: var(--success);
+  margin: 0 0 0.6rem;
+  font-size: 1.3rem;
+}
+
+.success-panel .ref {
+  font-weight: 600;
+  font-family: monospace;
+  background: var(--surface);
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+}
+
+form.hidden {
+  display: none;
+}
+
+
+/* ==========================================================================
+   FORM SECTIONS
+   Each fieldset ("Personal details", "Business details", etc.) is separated
+   by a top border, except the first one (it has nothing above it to divide from).
+   ========================================================================== */
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 2.25rem;
+}
+
+fieldset.section {
+  border-top: 1px solid var(--line);
+  padding-top: 1.75rem;
+}
+
+fieldset.section:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.section-title {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+}
+
+.section-desc {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  margin: 0 0 1.25rem;
+}
+
+.required-note {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 1.75rem;
+}
+
+
+/* ==========================================================================
+   FIELD LABELS, HINTS & SPACING
+   ========================================================================== */
+
+legend.field-legend,
+.field-label {
+  font-weight: 600;
+  font-size: 0.98rem;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  display: block;
+}
+
+.field-hint {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  margin: 0 0 0.6rem;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+label.field-label {
+  margin-bottom: 0.4rem;
+}
+
+.optional-tag {
+  color: var(--ink-soft);
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+
+/* ==========================================================================
+   TEXT INPUTS & TEXTAREAS
+   ========================================================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 0.65rem 0.75rem;
+  min-height: 44px; /* meets the recommended minimum touch-target size */
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* ACCESSIBILITY: a clearly visible focus ring on every interactive element,
+   including the custom CAPTCHA checkbox (which uses role="checkbox" instead
+   of a real <input>, so it needs this selector added explicitly). */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[role="checkbox"]:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Invalid-state styling, driven by the aria-invalid attribute JavaScript sets */
+input[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--error);
+  background: var(--error-bg);
+}
+
+
+/* ==========================================================================
+   FIELD ERROR MESSAGES
+   Each field has a hidden <div class="error-msg"> next to it. JavaScript
+   fills it with text and adds .visible when that specific field is invalid.
+   ========================================================================== */
+
+.error-msg {
+  color: var(--error);
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 0.4rem;
+  display: none;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.error-msg.visible {
+  display: flex;
+}
+
+.error-msg svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+
+/* ==========================================================================
+   RADIO BUTTON GROUPS (Yes/No questions)
+   ========================================================================== */
+
+.radio-group {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.6rem 1.1rem;
+  background: var(--surface);
+  flex: 0 0 auto;
+}
+
+/* Highlight whichever option is currently selected */
+.radio-option:has(input:checked) {
+  border-color: var(--teal);
+  background: color-mix(in srgb, var(--teal) 6%, var(--surface));
+}
+
+.radio-option input {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--teal);
+  flex-shrink: 0;
+}
+
+.radio-option label {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+
+/* ==========================================================================
+   CONDITIONAL (DYNAMICALLY SHOWN) FIELDS
+   These are the fields that only appear after answering "Yes" to a
+   Yes/No question — the file upload and the HSR details box.
+   JavaScript toggles the [hidden] attribute on the wrapping element;
+   this CSS just styles it as a distinct "nested" block when visible.
+   ========================================================================== */
+
+.conditional-field {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-left: 3px solid var(--teal);
+  border-radius: var(--radius);
+}
+
+.conditional-field[hidden] {
+  display: none;
+}
+
+.conditional-field .field-label {
+  margin-top: 0;
+}
+
+
+/* ==========================================================================
+   FILE UPLOAD (health & safety policy attachment)
+   ========================================================================== */
+
+.file-drop {
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  background: var(--paper);
+}
+
+.file-drop input[type="file"] {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+}
+
+/* List of attached files, rendered by JavaScript after a file is selected */
+#policy-file-list {
+  margin: 0.6rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+#policy-file-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+#policy-file-list button {
+  background: none;
+  border: none;
+  color: var(--error);
+  cursor: pointer;
+  font-size: 0.82rem;
+  text-decoration: underline;
+  padding: 0;
+}
+
+
+/* ==========================================================================
+   MOCK CAPTCHA WIDGET
+   A visual stand-in for Google reCAPTCHA (see script.js for why it's mocked).
+   Built as a styled div with role="checkbox" rather than a real checkbox
+   input, to closely match the look of the real widget.
+   ========================================================================== */
+
+.captcha-wrap {
+  margin-top: 0.5rem;
+}
+
+.captcha-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  padding: 0.9rem 1.1rem;
+  max-width: 300px;
+}
+
+.captcha-checkbox {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--line-strong);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: var(--surface);
+  transition: border-color 0.15s;
+}
+
+/* Checked state: filled teal background with a checkmark icon */
+.captcha-checkbox[aria-checked="true"] {
+  background: var(--teal);
+  border-color: var(--teal);
+}
+
+.captcha-checkbox svg {
+  display: none;
+  color: #fff;
+}
+
+.captcha-checkbox[aria-checked="true"] svg {
+  display: block;
+}
+
+/* Loading state: brief spinner shown while "verifying" (simulated delay) */
+.captcha-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid var(--line);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  display: none;
+  animation: spin 0.7s linear infinite;
+}
+
+.captcha-checkbox.loading .captcha-spinner {
+  display: block;
+}
+
+.captcha-checkbox.loading svg,
+.captcha-checkbox.loading {
+  pointer-events: none; /* prevent re-clicking while a "verification" is in progress */
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.captcha-label {
+  font-size: 0.85rem;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.captcha-brand {
+  font-size: 0.65rem;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.captcha-brand strong {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--ink);
+  font-family: var(--font-head);
+  font-style: italic;
+}
+
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.submit-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.85rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 600;
+  min-height: 48px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--teal-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border: 1.5px solid var(--line-strong);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+
+/* ==========================================================================
+   ACCESSIBILITY: REDUCED MOTION
+   Disables the CAPTCHA spinner animation for anyone who has asked their
+   OS to minimize motion effects.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .captcha-spinner {
+    animation: none;
+  }
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contractor Registration &amp; Health and Safety Declaration</title>
+
+  <!-- Google Fonts: Newsreader (headings) + IBM Plex Sans (everything else) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ACCESSIBILITY: lets keyboard/screen-reader users skip straight to the
+       form instead of tabbing through the header first. Hidden until focused. -->
+  <a href="#main-content" class="skip-link">Skip to form</a>
+
+  <!-- ============================== PAGE HEADER ============================== -->
+  <header class="service-header">
+    <div class="header-inner">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="3" y="7" width="18" height="13" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M8 7V5.5C8 4.67 8.67 4 9.5 4H14.5C15.33 4 16 4.67 16 5.5V7" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+      <div>
+        <p class="org">My Company</p>
+        <h1>Contractor registration &amp; H&amp;S declaration</h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- ============================== INTRO ============================== -->
+    <div class="intro">
+      <h2>Register as an approved contractor</h2>
+      <p>Complete this form to register your business with My Company and declare your workplace health and safety arrangements. We use this information to assess and onboard contractors before work begins on site.</p>
+    </div>
+
+    <!-- ============================== INSTRUCTIONS ============================== -->
+    <div class="instructions-box">
+      <h3>Before you start</h3>
+      <ul>
+        <li>This form takes about 5 minutes. You can't save and return to it later, so have your ABN and (if applicable) a copy of your health and safety policy ready.</li>
+        <li>Fields marked <strong>*</strong> are mandatory. All other fields are optional but help us process your registration faster.</li>
+        <li>Some questions reveal extra fields depending on how you answer — for example, if you answer "Yes" to having a health and safety policy, you'll be asked to attach it.</li>
+        <li>You'll need to complete a short verification step before submitting.</li>
+      </ul>
+    </div>
+
+    <!-- ============================== ERROR SUMMARY ==============================
+         Hidden by default. script.js shows this and fills the list with links
+         when the form is submitted with invalid/missing fields. role="alert" and
+         tabindex="-1" let JavaScript move screen-reader focus here on submit. -->
+    <div id="error-summary" role="alert" tabindex="-1" aria-labelledby="error-summary-heading">
+      <h2 id="error-summary-heading">There's a problem</h2>
+      <ul id="error-summary-list"></ul>
+    </div>
+
+    <!-- ============================== SUCCESS PANEL ==============================
+         Hidden by default. script.js shows this (and hides the form) after a
+         successful submit. -->
+    <div class="success-panel" id="success-panel" role="status" tabindex="-1">
+      <h2>Registration submitted</h2>
+      <p>Thanks — your contractor registration has been received. Reference number: <span class="ref" id="ref-number"></span></p>
+      <p>Our compliance team will review your details and be in touch within 3 business days.</p>
+      <button type="button" class="btn-secondary" id="new-report-btn">Start a new registration</button>
+    </div>
+
+    <form id="reg-form" novalidate>
+      <!-- novalidate: we're doing our own validation in script.js (with custom
+           error messages and an error summary), so the browser's built-in
+           validation popups are turned off here. -->
+
+      <p class="required-note">
+        Fields marked <span aria-hidden="true">*</span><span class="visually-hidden"> (required)</span> are mandatory.
+      </p>
+
+      <!-- ============================== PERSONAL DETAILS ============================== -->
+      <fieldset class="section">
+        <legend class="section-title">Personal details</legend>
+        <p class="section-desc">The primary contact for this registration.</p>
+
+        <div class="field">
+          <label class="field-label" for="p-name">Name <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="p-name" name="personalName" autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="p-address">Address <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="p-address" name="personalAddress" autocomplete="street-address">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="p-phone">Phone <span class="optional-tag">(optional)</span></label>
+          <p class="field-hint" id="p-phone-hint">Australian number, e.g. 0412 345 678 (mobile) or (02) 1234 5678 (landline). +61 also accepted.</p>
+          <!-- Optional field, but validated with an Australian-phone regex in script.js if filled in -->
+          <input type="tel" id="p-phone" name="personalPhone" autocomplete="tel" aria-describedby="p-phone-hint">
+          <div class="error-msg" id="p-phone-error" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="p-email">Email <span aria-hidden="true">*</span></label>
+          <p class="field-hint" id="p-email-hint">We'll send your registration confirmation here.</p>
+          <!-- MANDATORY field -->
+          <input type="email" id="p-email" name="personalEmail" autocomplete="email" aria-describedby="p-email-hint" aria-required="true">
+          <div class="error-msg" id="p-email-error" role="alert"></div>
+        </div>
+      </fieldset>
+
+      <!-- ============================== BUSINESS DETAILS ============================== -->
+      <fieldset class="section">
+        <legend class="section-title">Business details</legend>
+        <p class="section-desc">Details of the business you're registering.</p>
+
+        <div class="field">
+          <label class="field-label" for="b-company">Company name <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="b-company" name="companyName" autocomplete="organization">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="b-abn">ABN <span aria-hidden="true">*</span></label>
+          <p class="field-hint" id="b-abn-hint">11-digit Australian Business Number, e.g. 51 824 753 556</p>
+          <!-- MANDATORY field. inputmode="numeric" shows a numeric keypad on mobile. -->
+          <input type="text" id="b-abn" name="abn" inputmode="numeric" maxlength="14" aria-describedby="b-abn-hint" aria-required="true">
+          <div class="error-msg" id="b-abn-error" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="b-ceo">CEO <span class="optional-tag">(optional)</span></label>
+          <input type="text" id="b-ceo" name="ceo" autocomplete="off">
+        </div>
+      </fieldset>
+
+      <!-- ============================== HEALTH AND SAFETY ==============================
+           Both questions here are the "dynamic show/hide" fields: answering "Yes"
+           reveals a follow-up field, answering "No" keeps it hidden. See script.js
+           sections 2a/2b for the logic. -->
+      <fieldset class="section">
+        <legend class="section-title">Health and safety</legend>
+        <p class="section-desc">Tell us about your workplace health and safety arrangements.</p>
+
+        <!-- Question 1: H&S policy -->
+        <div class="field">
+          <span class="field-label" id="hs-policy-label">Does your company have a health and safety policy? <span aria-hidden="true">*</span></span>
+          <div class="radio-group" role="radiogroup" aria-labelledby="hs-policy-label" aria-required="true" id="hs-policy-group">
+            <div class="radio-option">
+              <!-- aria-controls/aria-expanded describe the hidden field this radio reveals -->
+              <input type="radio" name="hasPolicy" id="policy-yes" value="yes" aria-controls="policy-file-wrap" aria-expanded="false">
+              <label for="policy-yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="hasPolicy" id="policy-no" value="no">
+              <label for="policy-no">No</label>
+            </div>
+          </div>
+          <div class="error-msg" id="hasPolicy-error" role="alert"></div>
+
+          <!-- Revealed only when "Yes" is selected above -->
+          <div class="conditional-field" id="policy-file-wrap" hidden>
+            <label class="field-label" for="policy-file">Attach a copy of your policy <span aria-hidden="true">*</span></label>
+            <p class="field-hint" id="policy-file-hint">PDF, DOC or DOCX, up to 10MB.</p>
+            <div class="file-drop">
+              <input type="file" id="policy-file" name="policyFile" accept=".pdf,.doc,.docx" aria-describedby="policy-file-hint">
+              <ul id="policy-file-list" aria-live="polite"></ul>
+            </div>
+            <div class="error-msg" id="policyFile-error" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Question 2: Health & Safety Representative (HSR) -->
+        <div class="field" style="margin-top: 1.75rem;">
+          <span class="field-label" id="hs-hsr-label">Does your company have a health and safety representative (HSR)? <span aria-hidden="true">*</span></span>
+          <div class="radio-group" role="radiogroup" aria-labelledby="hs-hsr-label" aria-required="true" id="hs-hsr-group">
+            <div class="radio-option">
+              <input type="radio" name="hasHsr" id="hsr-yes" value="yes" aria-controls="hsr-details-wrap" aria-expanded="false">
+              <label for="hsr-yes">Yes</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="hasHsr" id="hsr-no" value="no">
+              <label for="hsr-no">No</label>
+            </div>
+          </div>
+          <div class="error-msg" id="hasHsr-error" role="alert"></div>
+
+          <!-- Revealed only when "Yes" is selected above -->
+          <div class="conditional-field" id="hsr-details-wrap" hidden>
+            <label class="field-label" for="hsr-details">Provide details <span aria-hidden="true">*</span></label>
+            <p class="field-hint" id="hsr-details-hint">Name and contact details of your health and safety representative.</p>
+            <textarea id="hsr-details" name="hsrDetails" aria-describedby="hsr-details-hint" maxlength="400"></textarea>
+            <div class="error-msg" id="hsrDetails-error" role="alert"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ============================== VERIFICATION (CAPTCHA) ==============================
+           This is a mock "I'm not a robot" widget, not the real Google reCAPTCHA —
+           see the note at the top of script.js section 7 for why. -->
+      <fieldset class="section">
+        <legend class="section-title">Verification</legend>
+        <p class="section-desc">Confirm you're not a robot before submitting.</p>
+
+        <div class="captcha-wrap">
+          <div class="captcha-box">
+            <div class="captcha-checkbox" id="captcha-checkbox" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="captcha-label">
+              <div class="captcha-spinner" aria-hidden="true"></div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 12L9 17L20 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="captcha-label" id="captcha-label">I'm not a robot</span>
+            <span class="captcha-brand"><strong>reCAPTCHA</strong>Privacy · Terms</span>
+          </div>
+          <div class="error-msg" id="captcha-error" role="alert"></div>
+        </div>
+      </fieldset>
+
+      <!-- ============================== SUBMIT ============================== -->
+      <div class="submit-row">
+        <button type="submit" class="btn-primary" id="submit-btn">Submit registration</button>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- Placed just before </body> so the DOM above is fully parsed before
+       script.js runs its document.getElementById() calls. -->
+  <script src="script.js"></script>
+</body>
+</html>
